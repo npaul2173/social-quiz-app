@@ -3,22 +3,18 @@ import mongoose from 'mongoose';
 import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
-import Controller from '@/utils/interfaces/controller.interface';
-import ErrorMiddleware from '@/middleware/error.middleware';
 import helmet from 'helmet';
 
 class App {
     public express: Application;
     public port: number;
 
-    constructor(controllers: Controller[], port: number) {
+    constructor(port: number) {
         this.express = express();
         this.port = port;
 
         this.initialiseDatabaseConnection();
         this.initialiseMiddleware();
-        this.initialiseControllers(controllers);
-        this.initialiseErrorHandling();
     }
 
     private initialiseMiddleware(): void {
@@ -30,22 +26,13 @@ class App {
         this.express.use(compression());
     }
 
-    private initialiseControllers(controllers: Controller[]): void {
-        controllers.forEach((controller: Controller) => {
-            this.express.use('/api', controller.router);
-        });
-    }
-
-    private initialiseErrorHandling(): void {
-        this.express.use(ErrorMiddleware);
-    }
-
     private initialiseDatabaseConnection(): void {
         const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
 
-        mongoose.connect(
-            `mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`
-        );
+        mongoose
+            .connect(`mongodb://${MONGO_PATH}`)
+            .then(() => console.log('connected'))
+            .catch((error) => console.log(error));
     }
 
     public listen(): void {
