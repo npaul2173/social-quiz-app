@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema , Document} from 'mongoose';
 
 const SCHEMA_NAME = 'Product';
 interface Product {
