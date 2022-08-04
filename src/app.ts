@@ -4,23 +4,20 @@ import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import Logging from 'library/logging';
-import UserRoutes from 'modules/user/routes';
-
-import swaggerUI from 'swagger-ui-express';
-import swaggerJsDoc from 'swagger-jsdoc';
-
+import Logging from 'utils/library/logging';
+import UserRoutes from 'modules/author/routes';
+import { Controller } from 'utils/interfaces/controller';
 class App {
     public express: Application;
     public port: number;
 
-    constructor(port: number) {
+    constructor(port: number, controllers: Controller[]) {
         this.express = express();
         this.port = port;
 
         this.initialiseDatabaseConnection();
         this.initialiseMiddleware();
-        this.initialiseControllers();
+        this.initialiseControllers(controllers);
         this.initializeSwagger();
     }
 
@@ -34,7 +31,10 @@ class App {
         this.express.use(compression());
     }
 
-    private initialiseControllers(): void {
+    private initialiseControllers(controllers: Controller[]): void {
+        controllers.forEach((controller: Controller) => {
+            this.express.use('/api', controller.router);
+        });
         this.express.use('/user', UserRoutes);
         this.express.get('/', (req, res, next) =>
             res.status(200).json({ message: 'base Url' })
@@ -46,13 +46,13 @@ class App {
 
         mongoose
             .connect(`mongodb://${MONGO_PATH}`)
-            .then(() => Logging.info('Database New Connected'))
+            .then(() => Logging.info('Database  Connected 🔗'))
             .catch((error) => console.log(error));
     }
 
     public listen(): void {
         this.express.listen(this.port, () => {
-            console.log(`App listening on the port ${this.port}`);
+            Logging.info(`App listening on the port ${this.port} 🤞`);
         });
     }
 }
