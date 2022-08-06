@@ -37,7 +37,7 @@ class App {
         });
         this.express.use('/user', UserRoutes);
         this.express.get('/', (req, res, next) =>
-            res.status(200).json({ message: 'base Url' })
+            res.status(200).json({ message: 'Healthy' })
         );
     }
 

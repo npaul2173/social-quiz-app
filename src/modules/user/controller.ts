@@ -31,8 +31,8 @@ class UserController implements Controller {
         resp: Response,
         next: NextFunction
     ) => {
-        const { name } = req.body as { name: string };
-        const data = await this.userService.getUser(name);
+        const { email } = req.body as { email: string };
+        const data = await this.userService.getUser(email);
         resp.status(StatusCodes.OK).json(data === null ? [] : [data]);
     };
 
