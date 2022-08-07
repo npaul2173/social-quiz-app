@@ -1,18 +1,20 @@
-import Logging from 'utils/library/logging';
-import Usermodel, { User } from './model';
+import UserModel, { User } from './model';
 
 class UserService {
-    private userObject = Usermodel;
+    private userObject = UserModel;
 
-    public async getUser(name: string) {
-        const user = await this.userObject.findOne({ name });
-        return user;
+    public async updateById(id: string, data: User) {
+        try {
+            const post = await this.userObject.findByIdAndUpdate(id, data);
+            return post;
+        } catch (error) {
+            throw new Error('Unable to create Post');
+        }
     }
 
     public async create(data: User) {
         try {
             const post = await this.userObject.create({ ...data });
-            Logging.info(post);
             return post;
         } catch (error) {
             throw new Error('Unable to create Post');

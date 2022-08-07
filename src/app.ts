@@ -5,7 +5,6 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import Logging from 'utils/library/logging';
-import UserRoutes from 'modules/author/routes';
 import { Controller } from 'utils/interfaces/controller';
 class App {
     public express: Application;
@@ -35,7 +34,6 @@ class App {
         controllers.forEach((controller: Controller) => {
             this.express.use('/api', controller.router);
         });
-        this.express.use('/user', UserRoutes);
         this.express.get('/', (req, res, next) =>
             res.status(200).json({ message: 'Healthy' })
         );

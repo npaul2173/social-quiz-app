@@ -6,9 +6,10 @@ import Logging from 'utils/library/logging';
 import { validate } from 'utils/library/validate';
 import { User } from './model';
 import UserService from './service';
-import { findValidation } from './validation';
+import { validationSchema } from './validation';
 
 class UserController implements Controller {
+    // initializing  the data model
     public path: string = '/user';
     public router: Router = Router();
     private userService = new UserService();
@@ -17,42 +18,53 @@ class UserController implements Controller {
     }
 
     private initialiseRouters(): void {
-        this.router.post(`${this.path}/create`, this.create);
         this.router.post(
-            `${this.path}/register`,
-            findValidation,
+            `${this.path}/create`,
+            validationSchema,
             validate,
-            this.register
+            this.create
+        );
+        this.router.post(
+            `${this.path}/update`,
+            // validationSchema,
+            // validate,
+            this.update
         );
     }
 
-    private register = async (
+    private update = async (
         req: Request,
-        resp: Response,
+        res: Response,
         next: NextFunction
-    ) => {
-        const { email } = req.body as { email: string };
-        const data = await this.userService.getUser(email);
-        resp.status(StatusCodes.OK).json(data === null ? [] : [data]);
+    ): Promise<void> => {
+        try {
+            const { id, data } = req.body as { id: string; data: User };
+            Logging.info({ id, data });
+            const ProductData = await this.userService.updateById(id, data);
+            res.status(StatusCodes.CREATED).json({ data: ProductData });
+        } catch (error) {
+            next(
+                new HttpException(StatusCodes.BAD_REQUEST, 'Cannot create post')
+            );
+        }
     };
 
-    // create controllers
     private create = async (
         req: Request,
-        resp: Response,
+        res: Response,
         next: NextFunction
     ): Promise<void> => {
         try {
             const data = req.body as User;
-            const UserData = await this.userService.create(data);
-            resp.status(StatusCodes.CREATED).json({ data: UserData });
+            Logging.info(data);
+            const ProductData = await this.userService.create(data);
+            res.status(StatusCodes.CREATED).json({ data: ProductData });
         } catch (error) {
-            const errorValue = new HttpException(
-                StatusCodes.BAD_REQUEST,
-                'Cannot Create user'
+            next(
+                new HttpException(StatusCodes.BAD_REQUEST, 'Cannot create post')
             );
-            next(errorValue);
         }
     };
 }
+
 export default UserController;
