@@ -35,7 +35,9 @@ class App {
             this.express.use('/api', controller.router);
         });
         this.express.get('/', (req, res, next) =>
-            res.status(200).json({ message: 'Healthy' })
+            res
+                .status(200)
+                .json({ message: 'Port is Healthy 💪 and running 🏃🏃🏃' })
         );
     }
 

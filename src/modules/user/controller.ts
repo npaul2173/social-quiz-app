@@ -6,7 +6,7 @@ import Logging from 'utils/library/logging';
 import { validate } from 'utils/library/validate';
 import { User } from './model';
 import UserService from './service';
-import { validationSchema } from './validation';
+import { validation } from './validation';
 
 class UserController implements Controller {
     // initializing  the data model
@@ -20,16 +20,11 @@ class UserController implements Controller {
     private initialiseRouters(): void {
         this.router.post(
             `${this.path}/create`,
-            validationSchema,
+            validation,
             validate,
             this.create
         );
-        this.router.post(
-            `${this.path}/update`,
-            // validationSchema,
-            // validate,
-            this.update
-        );
+        this.router.post(`${this.path}/update`, this.update);
     }
 
     private update = async (
