@@ -6,11 +6,15 @@ interface User {
     middleName: string;
     lastName: string;
     subtitle: string;
-    interests: string[];
+    email: string;
     bio: string;
     company: {
         name: string;
         workExperience: number;
+    };
+    topics: {
+        type: Schema.Types.ObjectId;
+        ref: 'Topics';
     };
 }
 
@@ -29,9 +33,10 @@ const schema: Schema = new Schema({
         type: String,
         required: true,
     },
+    email: { type: String, required: true },
     subtitle: { type: String },
     bio: { type: String, trim: true },
-    interests: [String],
+    topics: [String],
     company: {
         name: { type: String, required: true },
         workExperience: { type: Number, default: 4.5 },

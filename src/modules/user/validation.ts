@@ -1,9 +1,10 @@
 import { body, check } from 'express-validator';
 
 const validation = [
-    body('name', 'Name field required').exists(),
-    body('email').isEmail().normalizeEmail().withMessage('almsdlak'),
-    body('company', 'Company field required').exists(),
+    body('firstName', 'First name required').exists(),
+    body('lastName', 'Last name required').exists(),
+    body('topics').isArray({ min: 1 }),
+    body('email', 'Enter valid email').isEmail().normalizeEmail(),
 ];
 
 export { validation };

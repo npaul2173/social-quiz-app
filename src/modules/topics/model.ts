@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-const SCHEMA_NAME = 'Topic';
+const SCHEMA_NAME = 'Topics';
 interface Topic {
     topicName: string;
     createdAt: string;

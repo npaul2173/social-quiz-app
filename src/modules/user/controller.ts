@@ -13,6 +13,7 @@ class UserController implements Controller {
     public path: string = '/user';
     public router: Router = Router();
     private userService = new UserService();
+
     constructor() {
         this.initialiseRouters();
     }
@@ -35,8 +36,8 @@ class UserController implements Controller {
         try {
             const { id, data } = req.body as { id: string; data: User };
             Logging.info({ id, data });
-            const ProductData = await this.userService.updateById(id, data);
-            res.status(StatusCodes.CREATED).json({ data: ProductData });
+            const productData = await this.userService.updateById(id, data);
+            res.status(StatusCodes.CREATED).json({ data: productData });
         } catch (error) {
             next(
                 new HttpException(StatusCodes.BAD_REQUEST, 'Cannot create post')
